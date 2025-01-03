@@ -1,15 +1,14 @@
 # Background
+All of these images were made using [Pinterest Trends 2025](https://business.pinterest.com/pl/pinterest-predicts/) as inspiration. I used two different models:
 
-All of those images where made by using Pinterest Trends 2025 as inspiration. I used two different models:
+- Stable Diffusion 3.5 Medium (~10 sec per image / 36 steps)
+- Flux.1DevFP8 (~50 sec per image / 36 steps)
 
-- Stable Diffision 3.5 Medium (~10sec per image / 36 steps)
-- Flux.1DevFP8 (~50sec per image / 36 steps)
+All images were generated locally on my machine (RTX 4080 16GB VRAM).
 
-All images where generated locally on my machine (RTX 4080 16 GB VRAM)
+# How I Created Prompts
 
-# How I created prompts
-
-I used Claude 3.5 Sonnet to create prompts based on web page screenshot with trend details.
+I used Claude 3.5 Sonnet to create prompts based on webpage screenshots with trend details..
 
 # Prompts
 
