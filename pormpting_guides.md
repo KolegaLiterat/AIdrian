@@ -5,6 +5,139 @@ Here I will publish tested prompting guides that work for me. All of them were g
 
 This can be used as an instruction for LLMs (I use Claude to generate prompts based on images or simple descriptions).
 
+
+## Cheyenne
+
+### 1. Master the Core Style Elements
+- Start with the primary visual style indicators:
+  - graphic novel
+  - illustration
+  - sketch
+  - lineart
+  - colored ink pencils
+  - crosshatching
+- Example: *"sketch, graphic novel illustration with heavy crosshatching and bold ink work"*
+
+### 2. Build Composition Structure
+- Begin with view specification:
+  - establishing shot
+  - candid view
+  - low angle
+  - dutch angle
+- Add scene framing:
+  - wide screen
+  - full scene
+  - multiple views
+- Example: *"establishing shot, wide screen view of [subject], multiple viewing angles"*
+
+### 3. Define Visual Quality and Detail Level
+- Include technical specifications:
+  - intricate
+  - full of details
+  - hyperdetailed
+  - 8K
+  - high quality
+- Focus on detail areas:
+  - complex background
+  - detailed outfits
+  - intricate patterns
+- Example: *"intricate detailed scene in 8K quality, complex background full of cultural elements"*
+
+### 4. Specify Color and Contrast
+- Use the model's core palette:
+  - High contrast
+  - Black and grungy white
+  - Midnight blue accents
+  - Warm gradients
+  - Limited palette
+- Include lighting specifics:
+  - strong rim lighting
+  - hard shadows
+  - dramatic lighting
+- Example: *"High contrast illustration with midnight blue accents, stark black and grungy white, warm gradients in shadows"*
+
+### 5. Add Artistic References
+- Include specific artist styles when needed:
+  - style by [artist name]
+  - in the manner of [artist]
+- Reference art movements:
+  - art nouveau
+  - ligne claire
+  - western comics
+- Example: *"style by Mike Mignola, western comics aesthetic with ligne claire technique"*
+
+### 6. Layer Environmental Details
+- Build complex backgrounds:
+  - specific location elements
+  - architectural details
+  - natural elements
+  - atmospheric effects
+- Example: *"grassy landfields with traditional camp structures, complex native camp background full of cultural details"*
+
+### 7. Incorporate Action and Movement
+- Use dynamic descriptors:
+  - motion trails
+  - speed lines
+  - impact frames
+  - dramatic poses
+- Example: *"dynamic action scene with speed lines and impact frames, dramatic pose emphasized by bold ink work"*
+
+### 8. Essential Negative Prompts
+Always include these core negative elements:
+```
+ugly, tiling, poorly drawn hands, poorly drawn feet, poorly drawn face, out of frame, extra limbs, disfigured, deformed, body out of frame, blurry, bad anatomy, watermark, grainy, signature, cut off, draft
+```
+
+Additional negatives by category:
+- Quality negatives:
+  ```
+  worst quality, low quality, lowres
+  ```
+- Style negatives:
+  ```
+  photo, realistic, photography, 3d, cg, 3d render
+  ```
+- Unwanted elements:
+  ```
+  text, watermark, picture frame, border, nsfw, nude, bright, shiny, saturated
+  ```
+
+### 9. Prompt Structure Template
+Use this order for complex prompts:
+1. View/Composition
+2. Subject description
+3. Style specifications
+4. Technical quality
+5. Background/Environment
+6. Lighting/Color
+7. Artist references
+
+Example complete prompt:
+```
+establishing shot, Cheyenne warrior in traditional garments, graphic novel illustration with heavy crosshatching, intricate 8K detail, complex native camp background with grassy landfields, high contrast black and white with midnight blue accents, style by [artist name], dramatic lighting with strong shadows
+```
+
+### 10. Advanced Techniques
+- Combine multiple style elements:
+  ```
+  sketch, graphic novel, ink work, crosshatching
+  ```
+- Layer multiple lighting effects:
+  ```
+  strong rim lighting, hard shadows, dramatic contrast
+  ```
+- Stack multiple quality indicators:
+  ```
+  intricate, hyperdetailed, full of details, 8K
+  ```
+
+### 11. Common Mistakes to Avoid
+- Don't mix conflicting styles
+- Avoid overcrowding with too many artist references
+- Don't use style weights or brackets
+- Avoid generic quality terms without specifics
+- Don't mix historical periods unless intentional
+
 ## Flux1Dev
 
 **Important!** Flux does not need a negative prompt, but it needs a guidance node in ComfyUI!
