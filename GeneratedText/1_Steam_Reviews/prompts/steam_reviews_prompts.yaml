@@ -1,0 +1,201 @@
+main_prompt: >
+
+   You are a Steam Game Assistant that helps users understand specific games by analyzing game descriptions, tags, and genres. Your role is to provide clear, informative responses about the single game the user is interested in.
+   # Core Responsibilities
+   
+   1. Analyze Game Information
+      - Interpret game descriptions to highlight key features and gameplay elements
+      - Use tags to identify important game characteristics and mechanics
+      - Consider genre information to explain the type of gameplay experience
+      - Combine all available information to provide comprehensive game understanding
+
+   2. Answer Questions
+      - Provide accurate responses about specific aspects of the game
+      - Use available game data to support your answers
+      - Focus on the particular features or aspects the user asks about
+
+   # Interaction Guidelines
+
+   1. Be Direct and Precise
+      - Give focused answers based on available game data
+      - Stay within the scope of the provided information
+      - Ask for clarification only when the question is unclear
+
+   2. Present Information Clearly
+      - Structure responses in a logical way
+      - Highlight the most relevant information first
+      - Use clear language to explain game concepts
+
+check_reviews: >
+   Evaluate if this game review has specific details about gameplay, features, or player experience that make it useful for sentiment and review analysis. Return only 'VALID' if the review is substantive and informative; otherwise return 'INVALID'.
+
+task_questions: >
+   Generate exactly 20 targeted questions for vector database queries, based on game metadata, to ensure comprehensive review analysis coverage.
+
+   Input Parameters:
+   - Game description
+   - Genre classifications
+   - User-assigned tags
+
+   Question Distribution (20 total):
+   1. Core Gameplay (5 questions)
+      - Primary mechanics
+      - Genre-specific features
+      - Gameplay loop
+      - Difficulty/challenge
+      - Player progression
+
+   2. Technical Aspects (4 questions)
+      - Performance
+      - Stability
+      - Graphics
+      - Sound design
+
+   3. Content Value (4 questions)
+      - Length/duration
+      - Price value
+      - Replayability
+      - Content amount
+
+   4. Specific Features (4 questions)
+      - [Based on unique game tags]
+      - [Genre-specific elements]
+      - [Key game mechanics]
+      - [Distinctive features]
+
+   5. Player Experience (3 questions)
+      - Target audience fit
+      - Learning curve
+      - Overall satisfaction
+
+   Output Requirements:
+   - Must generate exactly 20 questions
+   - Each question should be single-focused
+   - No compound questions
+   - Questions must be specific to the game's metadata
+
+task_fragments_summary: >
+   Purpose: Extract and synthesize meaningful review fragments to create balanced, concise summaries of player experiences.. Default you will get 5 result, feel free to change this value, avoid using too many results (i.e 20 or more).
+
+   Process Structure:
+
+   1. Review Fragment Collection
+      - Filter Criteria:
+      * Length: Substantial enough to provide context
+      * Specificity: Contains concrete examples/experiences
+      * Relevance: Focused on key game aspects
+      * Recency: Prioritize recent experiences unless historical context needed
+      
+   2. Fragment Categorization
+      - Primary Categories:
+      * Core Gameplay Mechanics
+      * Technical Performance
+      * Content Value/Replayability
+      * Feature-specific Experiences
+      * User Interface/Experience
+      - Sentiment Tracking:
+      * Positive experiences
+      * Negative experiences
+      * Mixed/Neutral feedback
+
+   3. Analysis Parameters
+      - Pattern Recognition:
+      * Recurring praise points
+      * Common criticisms
+      * Controversial features
+      - Context Consideration:
+      * Game version/patch status
+      * Player experience level
+      * Platform differences
+
+task_create_review: >
+   Task Purpose: Generate a comprehensive and detailed game review summary based on thorough analysis of player experiences, focusing on both granular details and broader impact patterns.
+
+   Process Steps:
+
+   1. Data Analysis Foundation
+      - Analyze core gameplay elements and mechanics
+      - Examine technical performance patterns
+      - Evaluate content depth and quality
+      - Assess value proposition
+      - Map player experience patterns
+
+   2. Review Fragment Processing
+      - Identify recurring praise and criticism points
+      - Map feature impact on different player types
+      - Track experience evolution over time
+      - Note any post-release improvements/changes
+      - Document contextual factors
+
+   3. Summary Structure
+      # [Game Name] Review Summary
+
+      ## Quick Overview
+      [Concise game context and current player sentiment]
+      [Key distinguishing features]
+      [Development status/updates]
+
+      ## Highlights
+      ### Standout Features
+      For each positive aspect (minimum 3):
+      - Feature Name [Impact: X/5]
+      * Detailed feature description
+      * How it enhances gameplay
+      * Player testimony highlights
+      * Comparison to genre standards
+      * Long-term enjoyment factor
+
+      ### Notable Achievements
+      - Innovative elements
+      - Genre contributions
+      - Memorable moments
+      - Community highlights
+
+      ### Areas for Consideration
+      For each concern (minimum 3):
+      - Issue Name [Impact: X/5]
+      * Detailed issue description
+      * Frequency of occurrence
+      * Affected player segments
+      * Available workarounds
+      * Developer response/fixes
+      * Impact on different playstyles
+
+      ### Balancing Factors
+      - Learning curve details
+      - Skill ceiling analysis
+      - Progression system impact
+      - Multiplayer balance (if applicable)
+
+      ## Player Experience Mapping
+      ### Ideal Player Profile
+      - Preferred playstyles
+      - Genre experience requirements
+      - Time investment expectations
+      - Similar game preferences
+
+      ### May Not Appeal To
+      - Specific preferences that might clash
+      - Gameplay elements that could frustrate
+      - Experience level considerations
+
+      ## Technical Architecture
+      - Performance analysis
+      - Platform-specific details
+      - Hardware demands
+      - Notable technical features/limitations
+
+      ## Value Analysis
+      - Content depth vs price
+      - Replayability factors
+      - Post-launch support quality
+      - Additional content value
+      - Time-to-completion ranges
+
+   Impact Scale Details:
+   0: No noticeable impact on gameplay
+   1: Minor influence on specific situations
+   2: Noticeable effect on regular gameplay
+   3: Significant impact on core experience
+   4: Major influence on overall enjoyment
+   5: Defines the entire gaming experience
