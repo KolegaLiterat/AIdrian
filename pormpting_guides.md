@@ -195,6 +195,112 @@ establishing shot, Cheyenne warrior in traditional garments, graphic novel illus
 - Do not use prompt weights (e.g., `(object:1.5)`) as Flux.1 Dev does not support them. Instead, use natural language emphasis like "with focus on."
 - Avoid vague descriptors like "cool," "nice," or "beautiful," which lack specificity.
 
+## Runway (Gen 3 Alpha)
+
+### **Prompt Structures**
+
+A well-structured prompt enhances the model's ability to generate accurate and creative outputs. Use the following structure:
+
+**[camera movement]: [establishing scene]. [additional details].**
+
+#### **Base Prompt Example**
+- *Low angle static shot:* The camera is angled up at a woman wearing all orange as she stands in a tropical rainforest with colorful flora. The dramatic sky is overcast and gray.
+
+#### **Tips for Effective Prompts**
+- Focus on what *should* appear in the scene (e.g., "clear sky" instead of "sky with no clouds").
+- Repeat or reinforce key ideas across sections to improve adherence (e.g., "hyperspeed" for fast camera movements).
+- Keep prompts concise and specific.
+
+### **Sample Prompts**
+
+#### **Seamless Transitions**
+- *Continuous hyperspeed FPV footage:* The camera seamlessly flies through a glacial canyon to a dreamy cloudscape.
+
+#### **Camera Movement**
+- *A glowing ocean at night time:* The camera starts with a macro close-up of a glowing jellyfish and then expands to reveal the entire ocean lit up with various glowing colors under a starry sky. 
+  - *Camera Movement:* Begin with a macro shot of the jellyfish, then gently pull back and up to showcase the glowing ocean.
+
+#### **Text Title Cards**
+- *A title screen with dynamic movement:* The scene starts at a colorful paint-covered wall. Suddenly, black paint pours on the wall to form the word "Runway." The dripping paint is detailed and textured, centered, with superb cinematic lighting.
+
+### **Keywords for Enhanced Outputs**
+
+Incorporating relevant keywords into your prompts can refine the style, mood, and technical aspects of the generated video. Ensure that keywords align cohesively with your overall prompt.
+
+#### **Camera Styles**
+| Keyword               | Description                               |
+|-----------------------|-------------------------------------------|
+| Low angle             | Camera positioned below the subject       |
+| High angle            | Camera positioned above the subject       |
+| Overhead              | Directly above, bird’s-eye view           |
+| FPV                   | First-person view                        |
+| Hand held             | Gives a shaky, realistic feel            |
+| Wide angle            | Captures a broad field of view           |
+| Close up              | Focuses on a small detail or subject      |
+| Macro cinematography  | Extreme close-up for intricate details    |
+| Over the shoulder     | Perspective behind a character            |
+| Tracking              | Follows the subject's movement           |
+| Establishing wide     | Sets the scene context                   |
+| 50mm lens             | Standard cinematic view                  |
+| SnorriCam             | Fixed camera attached to a moving subject|
+| Realistic documentary | Naturalistic, unpolished look            |
+| Camcorder             | Retro home video style                   |
+
+#### **Lighting Styles**
+| Keyword           | Description                                |
+|-------------------|--------------------------------------------|
+| Diffused lighting | Soft, even light                          |
+| Silhouette        | Subject appears as a dark shape           |
+| Lens flare        | Light streaks caused by bright sources    |
+| Back lit          | Light source behind the subject           |
+| Side lit          | Light from one side                       |
+| [color] gel lighting | Colored lighting effects               |
+| Venetian lighting | Light filtered through blinds or slats    |
+
+#### **Movement Speeds**
+| Keyword      | Description                     |
+|--------------|---------------------------------|
+| Dynamic motion | Energetic and fast-paced      |
+| Slow motion   | Slowed-down movements          |
+| Hyperspeed    | Extremely fast movements       |
+| Timelapse     | Compressed time visualization  |
+
+#### **Movement Types**
+| Keyword       | Description                     |
+|---------------|---------------------------------|
+| Grows         | Gradual expansion              |
+| Emerges       | Gradual appearance             |
+| Explodes      | Sudden burst                   |
+| Ascends       | Moves upward                   |
+| Undulates     | Wave-like motion               |
+| Warps         | Distorted transformation       |
+| Transforms    | Changes into something else    |
+| Ripples       | Wave-like spreading effect     |
+| Shatters      | Breaks apart                   |
+| Unfolds       | Gradual opening                |
+| Vortex        | Spiral motion                  |
+
+#### **Style and Aesthetic**
+| Keyword         | Description                      |
+|-----------------|----------------------------------|
+| Moody           | Dark, atmospheric tone          |
+| Cinematic       | High-quality film style         |
+| Iridescent      | Shimmering color effects        |
+| Home video VHS  | Retro aesthetic                 |
+| Glitchcore      | Digital glitches and distortions|
+
+#### **Text Styles**
+For text-based elements like title cards:
+- Bold
+- Graffiti
+- Neon
+- Varsity
+- Embroidery
+
+### **Experimentation Encouraged**
+
+While this guide provides structured examples and keyword suggestions, experimentation is key to unlocking Gen-3 Alpha's full potential. Combine different styles, movements, and aesthetics to bring your unique vision to life!
+
 
 ## Stable Diffiusion 3.5
 
