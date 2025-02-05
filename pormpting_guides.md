@@ -138,6 +138,76 @@ establishing shot, Cheyenne warrior in traditional garments, graphic novel illus
 - Avoid generic quality terms without specifics
 - Don't mix historical periods unless intentional
 
+## DreamShaper XL
+
+For Positive Prompts:
+
+1. Start with quality indicators:
+   - Begin with phrases like "cinematic film still" when aiming for photorealistic results
+   - Use "masterpiece, best quality, ultra-detailed" for enhanced quality
+
+2. Subject description structure:
+   - Start with the main subject (e.g., "photo of...", "portrait of...")
+   - Include clear descriptors of the subject's appearance
+   - Specify important details like clothing, expressions, or distinctive features
+
+3. Environmental elements:
+   - Describe the setting or background
+   - Include lighting conditions (e.g., "intense sunlight", "golden hour")
+   - Add atmospheric elements (e.g., "blurry background", "bokeh effect")
+
+4. Technical specifications:
+   - Include quality indicators (e.g., "highres", "4k", "8k")
+   - Mention "intricate detail" or "amazing quality" for better results
+   - Add "wallpaper" if you want desktop-appropriate compositions
+
+5. Style elements:
+   - Specify artistic effects (e.g., "analog film grain")
+   - Include color schemes if desired (e.g., "light amber and red")
+   - Add mood descriptors (e.g., "brooding mood")
+
+For Negative Prompts:
+
+Always include these key elements to avoid common issues:
+- "(low quality, worst quality:1.4)"
+- "cgi"
+- "text"
+- "signature"
+- "watermark"
+- "extra limbs"
+
+Additional negative elements to consider:
+- "ugly"
+- "deformed"
+- "noisy"
+- "blurry"
+- "low contrast"
+- "3d render"
+- "bad quality"
+
+Example prompt template:
+
+Positive:
+```
+cinematic film still, [main subject description], [appearance details], [environment/setting], [lighting], [quality specifications (4k, highres)], [style elements], amazing quality, wallpaper
+```
+
+Negative:
+```
+(low quality, worst quality:1.4), cgi, text, signature, watermark, extra limbs, ugly, deformed, noisy, blurry, low contrast
+```
+
+When crafting prompts:
+- Be specific about what you want
+- Layer descriptive elements from general to specific
+- Include technical quality markers
+- Always use both positive and negative prompts
+- Keep descriptions clear and coherent
+- Use commas to separate elements
+- Consider adding artistic style references when needed
+
+Remember that the order of elements matters - start with quality indicators, then subject description, followed by environment and technical specifications.
+
 ## Flux1Dev
 
 **Important!** Flux does not need a negative prompt, but it needs a guidance node in ComfyUI!
