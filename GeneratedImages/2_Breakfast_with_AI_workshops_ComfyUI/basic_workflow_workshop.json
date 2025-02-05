@@ -1,0 +1,561 @@
+{
+  "last_node_id": 28,
+  "last_link_id": 56,
+  "nodes": [
+    {
+      "id": 23,
+      "type": "VAEDecode",
+      "pos": [
+        1073.655029296875,
+        -895.1240234375
+      ],
+      "size": [
+        210,
+        46
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 47
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 48
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            49,
+            50
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 20,
+      "type": "KSampler //Inspire",
+      "pos": [
+        682.2460327148438,
+        -735.8690795898438
+      ],
+      "size": [
+        317.4000244140625,
+        426
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 56
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 42
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 45
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 46
+        },
+        {
+          "name": "scheduler_func_opt",
+          "type": "SCHEDULER_FUNC",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            47
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler //Inspire"
+      },
+      "widgets_values": [
+        694260305389839,
+        "randomize",
+        8,
+        2,
+        "dpmpp_sde",
+        "karras",
+        1,
+        "GPU(=A1111)",
+        "incremental",
+        0,
+        0,
+        "linear",
+        0
+      ]
+    },
+    {
+      "id": 1,
+      "type": "CheckpointLoaderSimple",
+      "pos": [
+        -569.1891479492188,
+        -869.5911254882812
+      ],
+      "size": [
+        315,
+        98
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            54
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            55
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            48
+          ],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": [
+        "dreamshaperXL_v21TurboDPMSDE.safetensors"
+      ]
+    },
+    {
+      "id": 27,
+      "type": "LoraLoader",
+      "pos": [
+        -556.9771118164062,
+        -708.387451171875
+      ],
+      "size": [
+        315,
+        126
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 54
+        },
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 55
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            56
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            51
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoader"
+      },
+      "widgets_values": [
+        "aidmaFluxStyleXL-v0.2.safetensors",
+        0.7000000000000001,
+        1
+      ]
+    },
+    {
+      "id": 28,
+      "type": "CLIPSetLastLayer",
+      "pos": [
+        -560.8363037109375,
+        -523.4271850585938
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 51
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            52,
+            53
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPSetLastLayer"
+      },
+      "widgets_values": [
+        -17
+      ]
+    },
+    {
+      "id": 21,
+      "type": "CLIPTextEncode",
+      "pos": [
+        -91.83433532714844,
+        -374.35601806640625
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 53
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            45
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Prompt -",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "(low quality, worst quality:1.4), cgi, text, signature, watermark, extra limbs, ugly, deformed, noisy, blurry, low contrast, oversaturated, modern elements, digital looking, heavy grain, overexposed\n",
+        [
+          false,
+          true
+        ]
+      ],
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 19,
+      "type": "CLIPTextEncode",
+      "pos": [
+        -92.72480773925781,
+        -621.8350219726562
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 52
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            42
+          ],
+          "slot_index": 0
+        }
+      ],
+      "title": "Prompt +",
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "cinematic analog film still, masterpiece, best quality, portrait of an elegant woman standing on an ornate stone bridge, natural pose, casual elegant clothing, soft afternoon sunlight, historic European architecture, weathered stone textures, river below, film grain, muted vintage colors, Kodak Portra 400 style, depth of field, nostalgic atmosphere, intricate details, 8k, amazing quality",
+        [
+          false,
+          true
+        ]
+      ],
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 22,
+      "type": "EmptyLatentImage",
+      "pos": [
+        354.2387390136719,
+        -218.35948181152344
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            46
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLatentImage"
+      },
+      "widgets_values": [
+        1024,
+        1024,
+        4
+      ]
+    },
+    {
+      "id": 24,
+      "type": "PreviewImage",
+      "pos": [
+        1433.342041015625,
+        -1069.3499755859375
+      ],
+      "size": [
+        751.6275024414062,
+        530.56591796875
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 49
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 25,
+      "type": "SaveImage",
+      "pos": [
+        1434.1798095703125,
+        -488.85986328125
+      ],
+      "size": [
+        670.9122924804688,
+        558.5121459960938
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 50
+        }
+      ],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "workshop"
+      ]
+    }
+  ],
+  "links": [
+    [
+      42,
+      19,
+      0,
+      20,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      45,
+      21,
+      0,
+      20,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      46,
+      22,
+      0,
+      20,
+      3,
+      "LATENT"
+    ],
+    [
+      47,
+      20,
+      0,
+      23,
+      0,
+      "LATENT"
+    ],
+    [
+      48,
+      1,
+      2,
+      23,
+      1,
+      "VAE"
+    ],
+    [
+      49,
+      23,
+      0,
+      24,
+      0,
+      "IMAGE"
+    ],
+    [
+      50,
+      23,
+      0,
+      25,
+      0,
+      "IMAGE"
+    ],
+    [
+      51,
+      27,
+      1,
+      28,
+      0,
+      "CLIP"
+    ],
+    [
+      52,
+      28,
+      0,
+      19,
+      0,
+      "CLIP"
+    ],
+    [
+      53,
+      28,
+      0,
+      21,
+      0,
+      "CLIP"
+    ],
+    [
+      54,
+      1,
+      0,
+      27,
+      0,
+      "MODEL"
+    ],
+    [
+      55,
+      1,
+      1,
+      27,
+      1,
+      "CLIP"
+    ],
+    [
+      56,
+      27,
+      0,
+      20,
+      0,
+      "MODEL"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.7247295000000039,
+      "offset": [
+        745.3641944416153,
+        685.0176390983129
+      ]
+    },
+    "node_versions": {
+      "comfy-core": "v0.3.5-8-gbf2650a",
+      "ComfyUI-Inspire-Pack": "0a009c149999c335c323e2f7fc03b42865bf454a"
+    }
+  },
+  "version": 0.4
+}
