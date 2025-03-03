@@ -396,3 +396,103 @@ When incorporating text into images:
 - Use **double quotes** for clarity (e.g., “Welcome to the Future”).
 - Keep text concise for better rendering.
 - Specify placement if necessary (e.g., “Text centered at the top”).
+
+## Lumina 2.0
+
+# Lumina 2.0 Prompt Engineering Guidelines
+
+## Essential Prefix
+**Always begin your prompt with this exact phrase:**
+```
+You are an assistant designed to generate superior images with the superior degree of image-text alignment based on textual prompts or user prompts. <Prompt Start> 
+```
+This prefix is crucial for proper functioning of Lumina 2.0 and must be included before your actual prompt content.
+
+## Core Structure
+1. **Start with a Technical Description**: Begin with phrases like "meticulously crafted photograph" or "sweeping aerial view" to establish the medium and perspective.
+2. **Subject Description**: Clearly define your main subject with specific details about appearance, positioning, and emotional state.
+3. **Setting/Environment**: Describe the surrounding environment with sensory details about atmosphere, lighting, and contextual elements.
+4. **Technical Specifications**: Include camera details, perspective, composition style, and image quality indicators.
+
+## Key Elements for Powerful Prompts
+
+### Subject Detailing
+- **Character Specificity**: Include details about facial expressions, posture, clothing, accessories, and emotional state.
+- **Object Properties**: Define materials, textures, size, condition, and historical/cultural context.
+- **Action Dynamics**: Describe motion, intensity, and purpose of activities in the scene.
+
+### Environmental Context
+- **Atmosphere**: Use sensory details for weather, time of day, mood, and ambiance.
+- **Lighting Conditions**: Specify light sources, intensity, color temperature, shadows, and reflections.
+- **Background Elements**: Include geographical features, architectural elements, natural elements, and their relationship to the subject.
+
+### Technical Photography Elements
+- **Composition Techniques**: Mention framing (rule of thirds, leading lines), depth of field, perspective, and focal points.
+- **Color Palettes**: Define dominant colors, contrast levels, saturation, and color grading.
+- **Lighting Techniques**: Describe chiaroscuro, rim lighting, key lighting, fill lighting, or dramatic shadows.
+- **Special Effects**: Include filters, post-processing techniques, and artistic modifications.
+
+### Quality Enhancers
+- **Resolution Indicators**: Include terms like "8K", "ultra HD", "high resolution", or "masterpiece quality."
+- **Style References**: Mention artistic influences, time periods, or visual aesthetics.
+- **Emotional Impact**: Describe the intended emotional response or narrative theme.
+
+## Prompt Format Template
+```
+A [technical description] captures [subject] in/at [setting/environment]. The [subject details including appearance, posture, actions]. 
+
+The scene [environmental details including atmosphere, lighting, background elements]. 
+
+[Technical specifications about camera, composition, perspective]. [Details about lighting, colors, and textures]. 
+
+The image exudes [mood/emotional impact] and showcases [quality descriptors].
+```
+
+## Advanced Techniques
+
+### Contrast and Juxtaposition
+Create visual interest by contrasting elements:
+- Modern vs. traditional
+- Natural vs. artificial
+- Light vs. shadow
+- Motion vs. stillness
+
+### Sensory Layering
+Appeal to multiple senses in your descriptions:
+- Visual: Colors, shapes, patterns
+- Tactile: Textures, temperature, moisture
+- Auditory: Implied sounds in the scene
+- Olfactory: Suggested scents in the environment
+
+### Dynamic Range
+Incorporate varied elements across these spectrums:
+- Scale: Intimate close-ups to expansive landscapes
+- Time: Frozen moments to implied motion
+- Emotion: Subtle moods to intense feelings
+
+## Example Prompt Structures by Image Type
+
+### Portrait/Character
+```
+A meticulously crafted [photograph/painting/digital art] captures [character type] with [distinguishing features] and [emotional state]. The subject is positioned [position details] against [background elements]. Their [clothing/accessories] show [details], while their [facial expression] conveys [emotion/story]. The [lighting technique] enhances [specific features], creating [desired effect].
+```
+
+### Landscape
+```
+A [perspective] view of [location] [time of day/weather] through [medium]. The scene showcases [geographical features] with [texture details] and [atmospheric elements]. [Light source] illuminates [specific elements], creating [lighting effect]. The composition employs [technical approach] that accentuates [focal points]. The image is rendered in [quality level], highlighting [standout details].
+```
+
+### Conceptual/Fantasy
+```
+This [artistic style] masterpiece depicts [fantastical subject] in [otherworldly setting]. [Magical elements] interact with [realistic elements], creating [visual effect]. [Unusual lighting] illuminates [key features], while [color scheme] evokes [mood/emotion]. The [composition style] draws attention to [focal point], revealing [hidden details]. The overall aesthetic combines [contrasting elements] to achieve [intended impact].
+```
+
+## Tips for Optimization
+
+1. **Length and Detail Balance**: 150-300 words generally produces optimal results
+2. **Prioritize Visual Elements**: Front-load the most important visual aspects
+3. **Specific Over Generic**: Use precise descriptors rather than vague terms
+4. **Technical Language**: Include photography and art terminology for better results
+5. **Quality Markers**: Always include resolution and quality indicators
+6. **Emotional Anchoring**: Connect visual elements to emotions or narrative themes
+7. **Avoid Contradictions**: Ensure all elements in your prompt are consistent
