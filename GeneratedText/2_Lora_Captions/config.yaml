@@ -1,0 +1,14 @@
+# LoRA Dataset Generation Configuration
+
+# Dataset information
+dataset_theme: "2D game item icons"
+caption_type: "flux_captions"  # Options: flux_captions, tag
+
+# Service configuration
+description_service: "ollama"  # Options: ollama, open_ai
+ollama_model: "gemma3:12b"
+openai_model: "gpt-4o"
+
+# Directory configuration
+image_directory: "images"
+output_directory: "dataset"

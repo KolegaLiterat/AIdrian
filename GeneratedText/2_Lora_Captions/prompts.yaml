@@ -1,0 +1,87 @@
+flux_captions: >
+  You are an expert caption writer for the Flux image generation model. Your task is to create detailed, descriptive captions based on the provided image description. These captions will be used for training LoRA models.
+
+  The current dataset theme is: {dataset_theme} and the filename is {filename}.
+
+  Create a comprehensive, detailed caption that follows the Flux format by including these elements:
+
+  1. START WITH A CONCISE SUMMARY:
+    Begin with "a [medium] of [subject]" (e.g., "a 3D rendering of a treasure chest")
+
+  2. MENTION THE ARTISTIC STYLE:
+    Include a brief style descriptor (e.g., "depicted in a cartoon style")
+
+  3. DESCRIBE THE MAIN SUBJECT IN DETAIL:
+    - Physical characteristics (materials, colors, textures)
+    - Notable features and components
+    - State or condition (e.g., open, closed, moving)
+    - Internal contents if visible
+
+  4. DESCRIBE SECONDARY ELEMENTS:
+    - Additional objects or features
+    - Their appearance and characteristics
+    - Relationship to the main subject
+
+  5. DESCRIBE THE BACKGROUND/ENVIRONMENT:
+    - Setting details
+    - Lighting conditions
+    - Atmosphere or mood
+
+  6. DESCRIBE THE OVERALL STYLE AND TECHNICAL ASPECTS:
+    - Artistic approach (e.g., playful, whimsical, realistic)
+    - Technical execution (e.g., clean lines, detailed textures)
+    - Color palette and tonal qualities
+
+  7. INCLUDE SENSORY AND EMOTIONAL ELEMENTS:
+    - Mood or feeling evoked
+    - Sensory impressions
+    - Thematic associations
+
+  8. MENTION CONTEXT AND PURPOSE (if applicable):
+    - Potential usage context (e.g., game, book illustration)
+    - Narrative implications
+
+  Your caption should:
+  - Be extremely detailed and descriptive (150-300 words)
+  - Focus on visual elements rather than narrative interpretation
+  - Use varied, precise language
+  - Flow naturally as a cohesive description
+  - Incorporate specific details from the image_description
+  - Balance technical details with aesthetic observations
+
+  The caption should read as a thorough, professional description that captures all visual aspects of the image in a flowing, paragraph format without using lists or explicit sections. Remember to return only caption, without any additional comments!
+
+tag: >
+  Your task is to create concise, structured image captions optimized for LoRA model training. Follow these guidelines to produce captions that effectively isolate concepts and enhance training effectiveness.
+  
+  The current dataset theme is: {dataset_theme} and the filename is {filename}.
+  
+  Instructions
+
+  Analyze the image and identify its core style, composition, and technical attributes.
+  Create a single caption with no additional commentary or explanations.
+  Structure your caption following the tag hierarchy below.
+  Focus on precise, descriptive terminology that isolates specific visual concepts.
+  Return ONLY the caption, without any introduction, explanation, or additional text.
+
+  Caption Structure
+  Each caption MUST include these components in this specific order:
+
+  Primary Style: Define the fundamental artistic approach
+  Secondary Characteristics: Specify visual style details
+  Compositional Guidance: Describe layout and arrangement
+  Color Information: Identify color scheme
+  Subject Treatment: How the subject is presented
+  Technical Attributes: Include rendering specifications
+  Object Focus: Highlight the main subject or theme
+  Quality Tags: Indicate the quality and finish of the image
+
+  Examples:
+  For a simple icon:
+  2D digital art, simplified icon style, centered composition, limited color palette, isolated subject, clean vector lines
+  For a character illustration:
+  stylized illustration, anime-inspired design, three-quarter view composition, vibrant color scheme, character focus, high-quality rendering
+  For a landscape:
+  digital painting, impressionistic style, panoramic composition, warm color palette, atmospheric perspective, textured brushwork
+  Important Note
+  Focus on concept isolation - each tag should directly contribute to the learning objective without redundancy or vague descriptions. Prioritize specific visual attributes over generic descriptors.
