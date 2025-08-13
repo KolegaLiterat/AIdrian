@@ -1,0 +1,686 @@
+{
+  "name": "Reviews Parse From Steam",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        -784
+      ],
+      "id": "583b0659-d661-434c-9222-67486b8aee00",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"steam_game_id\": 3578240\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        0,
+        -784
+      ],
+      "id": "82166ecb-ea97-4cf5-966c-35aedce148b4",
+      "name": "Add Steam Game ID"
+    },
+    {
+      "parameters": {
+        "url": "=https://store.steampowered.com/app/{{ $json.steam_game_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        -784
+      ],
+      "id": "d031efc6-06fb-4962-a9b8-0b4bf47f187e",
+      "name": "Get Steam Game Description"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "Short Game Description",
+              "cssSelector": ".game_description_snippet"
+            },
+            {
+              "key": "Long Game Description",
+              "cssSelector": "#game_area_description"
+            },
+            {
+              "key": "Tags",
+              "cssSelector": ".glance_tags"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        -784
+      ],
+      "id": "bd367891-bba1-4ab3-9f56-41db686d4762",
+      "name": "Extract Game Data"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Short Game Description:\n\n {{ $json['Short Game Description'] }}\n\nLong Game Description:\n\n{{ $json['Long Game Description'] }}\n\nTags:\n\n{{ $json.Tags }}\n"
+            },
+            {
+              "content": "You are a game analysis expert preparing a review analysis framework. Using the provided Steam game data, create a comprehensive guide that will direct attention to the most relevant aspects when analyzing individual game reviews.\n\n**Input Data:**\n- Short game description\n- Long game description  \n- Steam tags\n\n**Required Output - Review Analysis Guide:**\n\n1. **Priority Focus Areas** (what to look for first in reviews):\n   - Core gameplay elements that define this game\n   - Technical performance aspects critical for this game type\n   - Content areas most likely to generate strong opinions\n   - Features that differentiate this game from competitors\n\n2. **Sentiment Detection Keywords:**\n   - **Positive indicators:** Specific terms/phrases that signal satisfaction with this game\n   - **Negative indicators:** Terms/phrases that signal problems or disappointment\n   - **Mixed/nuanced indicators:** Language suggesting conditional recommendations\n\n3. **Context Clues to Extract:**\n   - Player experience level indicators (casual/hardcore/genre veteran)\n   - Playtime-related comments that matter for this game type\n   - Comparison mentions that provide competitive context\n   - Technical setup/hardware references relevant to this game\n\n4. **Review Classification Framework:**\n   - What constitutes a \"helpful\" review for this specific game\n   - Red flags for potentially biased or uninformed reviews\n   - Key dimensions for rating review quality and relevance\n\n5. **Expected Review Patterns:**\n   - Common review structures for this game genre\n   - Typical player journey stages that generate reviews\n   - Seasonal/time-based factors that may influence sentiment\n\n**Output Format:** Create a checklist-style guide that can be applied systematically to each review for consistent, thorough analysis.",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        672,
+        -784
+      ],
+      "id": "b880ef52-051a-4c6a-a497-34fda75b626f",
+      "name": "Generate Review Guide Analysis",
+      "credentials": {
+        "openAiApi": {
+          "id": "Yv7i9DFExl1sfsBJ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://store.steampowered.com/appreviews/{{ $('Add Steam Game ID').item.json.steam_game_id }}?json=1&filter=recent&num_per_page=100",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        -784
+      ],
+      "id": "838c0a06-5063-4a39-a45c-8c35ad99252a",
+      "name": "Get All Reviews"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "reviews",
+        "include": "=",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1264,
+        -784
+      ],
+      "id": "4ec3921a-9e0d-459b-b841-f210721ef767",
+      "name": "Split Reviews"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-NANO"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "Look through provided review, and think if it will be valuabe in terms of getting strong and weak elements of game.\n\nAnswer YES or NO",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.reviews.review }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1488,
+        -784
+      ],
+      "id": "7daefe55-cbc2-473b-8e5f-017199f07ab2",
+      "name": "Validate Review",
+      "credentials": {
+        "openAiApi": {
+          "id": "Yv7i9DFExl1sfsBJ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "631c8e9b-b053-4974-bf1b-16b6e61fe85a",
+              "leftValue": "={{ $json.message.content }}",
+              "rightValue": "YES",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1856,
+        -784
+      ],
+      "id": "8f40a147-bb13-4b58-9a36-e74c291774e9",
+      "name": "Reviews Check"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "message.content.weak_elements",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        2448,
+        -688
+      ],
+      "id": "86fab492-7a79-46e4-aaf2-ffb67ebda724",
+      "name": "Weak Elements"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "message.content.strong_elements",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        2448,
+        -880
+      ],
+      "id": "62e2ab60-b5e9-4feb-b0aa-f6bdbfe6a537",
+      "name": "Strong Elements"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "message.content.contextual_insights.technical_issues",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        2448,
+        -1088
+      ],
+      "id": "91efec96-b513-4181-8141-bd7c5d9f717c",
+      "name": "Technical Issues"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $('Split Reviews').item.json.reviews.review }}"
+            },
+            {
+              "content": "=Analyze the provided game review using the review analysis guide to systematically extract insights about game strengths and weaknesses.\n\n**Guide**\n{{ $('Generate Review Guide Analysis').item.json.message.content }}\n\n**Instructions:**\n1. Apply the Priority Focus Areas from the analysis guide to identify key themes\n2. Use the Sentiment Detection Keywords to classify mentions as positive/negative/mixed\n3. Extract Context Clues to understand the review content\n4. Follow the Review Classification Framework to assess relevant insights\n\n**Required JSON Output:**\n```json\n{\n  \"strong_elements\": [\n    {\n      \"category\": \"gameplay|graphics|story|performance|audio|value|other\",\n      \"description\": \"specific strength mentioned\",\n      \"sentiment_strength\": \"mild|moderate|strong\"\n    }\n  ],\n  \"weak_elements\": [\n    {\n      \"category\": \"gameplay|graphics|story|performance|audio|value|other\", \n      \"description\": \"specific weakness mentioned\",\n      \"sentiment_strength\": \"mild|moderate|strong\"\n    }\n  ],\n  \"contextual_insights\": {\n    \"technical_issues\": [\"specific problems mentioned\"],\n    \"recommendation_type\": \"strong_yes|conditional_yes|neutral|conditional_no|strong_no\",\n  },\n  \"analysis_notes\": \"any patterns or insights that align with expected review patterns from the guide\"\n}",
+              "role": "system"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        2080,
+        -784
+      ],
+      "id": "471c9e7c-45a5-49c1-aa63-4bf65d9b4475",
+      "name": "Parse Reviews",
+      "credentials": {
+        "openAiApi": {
+          "id": "Yv7i9DFExl1sfsBJ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "214a2911-79e7-80fd-ba3b-d01a22bd10b1",
+          "mode": "list",
+          "cachedResultName": "Game Reviews Summary",
+          "cachedResultUrl": "https://www.notion.so/214a291179e780fdba3bd01a22bd10b1"
+        },
+        "title": "Game Reviews Summary",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Sentiment|rich_text",
+              "textContent": "None"
+            },
+            {
+              "key": "Category|rich_text",
+              "textContent": "technical_issues"
+            },
+            {
+              "key": "Description|rich_text",
+              "textContent": "={{ $json[\"message.content.contextual_insights.technical_issues\"] }}"
+            },
+            {
+              "key": "Review ID|title",
+              "title": "={{ $('Split Reviews').item.json.reviews.recommendationid }}"
+            },
+            {
+              "key": "Type|rich_text",
+              "textContent": "None"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        2672,
+        -1088
+      ],
+      "id": "d2ba79f4-3909-43af-8f42-de02ad2302ed",
+      "name": "Save Technical Issues",
+      "credentials": {
+        "notionApi": {
+          "id": "NWw4nzH3YLx4trKJ",
+          "name": "Literatowo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "214a2911-79e7-80fd-ba3b-d01a22bd10b1",
+          "mode": "list",
+          "cachedResultName": "Game Reviews Summary",
+          "cachedResultUrl": "https://www.notion.so/214a291179e780fdba3bd01a22bd10b1"
+        },
+        "title": "Game Reviews Summary",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Category|rich_text",
+              "textContent": "={{ $json.category }}"
+            },
+            {
+              "key": "Description|rich_text",
+              "textContent": "={{ $json.description }}"
+            },
+            {
+              "key": "Review ID|title",
+              "title": "={{ $('Split Reviews').item.json.reviews.recommendationid }}"
+            },
+            {
+              "key": "Sentiment|rich_text",
+              "textContent": "={{ $json.sentiment_strength }}"
+            },
+            {
+              "key": "Type|rich_text",
+              "textContent": "strong_elements"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        2672,
+        -880
+      ],
+      "id": "87887c37-53b8-4a4c-86cb-b304eef86e38",
+      "name": "Save Strong Elements",
+      "credentials": {
+        "notionApi": {
+          "id": "NWw4nzH3YLx4trKJ",
+          "name": "Literatowo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "214a2911-79e7-80fd-ba3b-d01a22bd10b1",
+          "mode": "list",
+          "cachedResultName": "Game Reviews Summary",
+          "cachedResultUrl": "https://www.notion.so/214a291179e780fdba3bd01a22bd10b1"
+        },
+        "title": "Game Reviews Summary",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Category|rich_text",
+              "textContent": "={{ $json.category }}"
+            },
+            {
+              "key": "Description|rich_text",
+              "textContent": "={{ $json.description }}"
+            },
+            {
+              "key": "Review ID|title",
+              "title": "={{ $('Split Reviews').item.json.reviews.recommendationid }}"
+            },
+            {
+              "key": "Sentiment|rich_text",
+              "textContent": "={{ $json.sentiment_strength }}"
+            },
+            {
+              "key": "Type|rich_text",
+              "textContent": "weak_elements"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        2672,
+        -688
+      ],
+      "id": "266b37db-22d7-483b-b323-1c2c1b49956b",
+      "name": "Save Weak Elements",
+      "credentials": {
+        "notionApi": {
+          "id": "NWw4nzH3YLx4trKJ",
+          "name": "Literatowo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "value": "214a2911-79e7-8075-bcee-e6723e777ada",
+          "mode": "list",
+          "cachedResultName": "Game Reviews Short Analysis",
+          "cachedResultUrl": "https://www.notion.so/214a291179e78075bceee6723e777ada"
+        },
+        "title": "Game Reviews Summary",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Analysis note|rich_text",
+              "textContent": "={{ $json.message.content.analysis_notes }}"
+            },
+            {
+              "key": "Recommendation|rich_text",
+              "textContent": "={{ $json.message.content.contextual_insights.recommendation_type }}"
+            },
+            {
+              "key": "Review ID|title",
+              "title": "={{ $('Split Reviews').item.json.reviews.recommendationid }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        2448,
+        -480
+      ],
+      "id": "59fc095c-a034-4ab0-adbe-f84a5a597196",
+      "name": "Save Short Analysis",
+      "credentials": {
+        "notionApi": {
+          "id": "NWw4nzH3YLx4trKJ",
+          "name": "Literatowo"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Add Steam Game ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Steam Game ID": {
+      "main": [
+        [
+          {
+            "node": "Get Steam Game Description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Steam Game Description": {
+      "main": [
+        [
+          {
+            "node": "Extract Game Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Game Data": {
+      "main": [
+        [
+          {
+            "node": "Generate Review Guide Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Review Guide Analysis": {
+      "main": [
+        [
+          {
+            "node": "Get All Reviews",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Reviews": {
+      "main": [
+        [
+          {
+            "node": "Split Reviews",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Reviews": {
+      "main": [
+        [
+          {
+            "node": "Validate Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Review": {
+      "main": [
+        [
+          {
+            "node": "Reviews Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reviews Check": {
+      "main": [
+        [
+          {
+            "node": "Parse Reviews",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Reviews": {
+      "main": [
+        [
+          {
+            "node": "Weak Elements",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Technical Issues",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Strong Elements",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save Short Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Technical Issues": {
+      "main": [
+        [
+          {
+            "node": "Save Technical Issues",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Strong Elements": {
+      "main": [
+        [
+          {
+            "node": "Save Strong Elements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weak Elements": {
+      "main": [
+        [
+          {
+            "node": "Save Weak Elements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "80c26c51-02c1-449b-b468-8884e9c5b268",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "deadf1dc7524de2d95893ecdbee99200faaaf3b4dc5804f4703571f489628ddc"
+  },
+  "id": "GFIxXxXYTV1VCccD",
+  "tags": [
+    {
+      "createdAt": "2025-06-09T15:19:24.120Z",
+      "updatedAt": "2025-06-09T15:19:24.120Z",
+      "id": "malxJEIe7SFMPM0V",
+      "name": "point17labs"
+    },
+    {
+      "createdAt": "2025-06-17T06:27:31.136Z",
+      "updatedAt": "2025-06-17T06:27:31.136Z",
+      "id": "Lxg7oCpPokgUGYiE",
+      "name": "steam"
+    },
+    {
+      "createdAt": "2025-06-17T06:27:33.014Z",
+      "updatedAt": "2025-06-17T06:27:33.014Z",
+      "id": "y2GGd3GtFXTmtVoj",
+      "name": "reviews"
+    },
+    {
+      "createdAt": "2025-06-17T06:27:34.525Z",
+      "updatedAt": "2025-06-17T06:27:34.525Z",
+      "id": "tUOErAeEmVajHAYU",
+      "name": "parsing"
+    }
+  ]
+}

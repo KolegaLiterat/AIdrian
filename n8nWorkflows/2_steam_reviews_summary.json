@@ -1,0 +1,476 @@
+{
+  "name": "Generate Reviews Summary",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        -336
+      ],
+      "id": "5ab6b037-7f5d-48df-9de1-86afa320bcc4",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "214a2911-79e7-80fd-ba3b-d01a22bd10b1",
+          "mode": "list",
+          "cachedResultName": "Game Reviews Summary",
+          "cachedResultUrl": "https://www.notion.so/214a291179e780fdba3bd01a22bd10b1"
+        },
+        "returnAll": true,
+        "filterType": "manual",
+        "filters": {
+          "conditions": [
+            {
+              "key": "Type|rich_text",
+              "condition": "equals",
+              "richTextValue": "weak_elements"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        128,
+        -448
+      ],
+      "id": "35ac9af6-a0fd-45f0-aeec-2e433cd30c71",
+      "name": "Get Weak Elements",
+      "credentials": {
+        "notionApi": {
+          "id": "NWw4nzH3YLx4trKJ",
+          "name": "Literatowo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "databasePage",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "214a2911-79e7-80fd-ba3b-d01a22bd10b1",
+          "mode": "list",
+          "cachedResultName": "Game Reviews Summary",
+          "cachedResultUrl": "https://www.notion.so/214a291179e780fdba3bd01a22bd10b1"
+        },
+        "returnAll": true,
+        "filterType": "manual",
+        "filters": {
+          "conditions": [
+            {
+              "key": "Type|rich_text",
+              "condition": "equals",
+              "richTextValue": "strong_elements"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        128,
+        -240
+      ],
+      "id": "fa8c8d65-da2a-4cec-b926-98a1c2e7c2d9",
+      "name": "Get Strong Elements",
+      "credentials": {
+        "notionApi": {
+          "id": "NWw4nzH3YLx4trKJ",
+          "name": "Literatowo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "include": "specifiedFields",
+        "fieldsToInclude": "property_category, , property_description,  property_sentiment",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        352,
+        -448
+      ],
+      "id": "9e3759c1-94a4-4596-a53b-f27014b876bc",
+      "name": "Aggregate Weak Elements"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "include": "specifiedFields",
+        "fieldsToInclude": "property_category, , property_description,  property_sentiment",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        352,
+        -240
+      ],
+      "id": "e05d8b02-68dc-48e7-9525-3261de323dfe",
+      "name": "Aggregate Strong Elements"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        944,
+        -336
+      ],
+      "id": "c01e89ab-fbf2-46e8-9819-3ff9ef1afb6b",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "message.content",
+              "renameField": true,
+              "outputFieldName": "Reviews Summary"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1168,
+        -336
+      ],
+      "id": "464ee885-6216-4d96-b5fd-6c9b426a09ca",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "folderId": "default",
+        "title": "Example of Reviews Summary"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        -336
+      ],
+      "id": "4c3ef472-d009-401f-8984-450d4ef7d57b",
+      "name": "Create a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "rez4thEwmDCLNZ8d",
+          "name": "Prywatne Docsy"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "={{ $json.id }}",
+        "simple": false,
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $('Generate Reviews Summary').item.json.choices[0].message.content }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1984,
+        -336
+      ],
+      "id": "aeed9a19-b763-47a0-a0c6-e9a7f348ebd3",
+      "name": "Add data to document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "rez4thEwmDCLNZ8d",
+          "name": "Prywatne Docsy"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ JSON.stringify($json['Reviews Summary']) }}"
+            },
+            {
+              "content": "Analyze game review data to create a comprehensive player sentiment summary focusing on user experience and opinions.\n\n**Input:** List of reviews with description, sentiment, and category\n\n**Output:** Player-focused analysis in executive summary format:\n\n**CRITICAL PLAYER FRUSTRATIONS** (Major sentiment drivers)\n- **[Issue]** - [How this affects player experience and emotional response]\n- Player Impact: [Frustration level and experience disruption]\n- Player Expectation Gap: [What players expected vs reality]\n\n**QUICK PLAYER SATISFACTION WINS** (High-impact improvements for user experience)\n- **[Issue]** - [Specific improvement needed and expected player reaction]\n- Expected Player Response: [Anticipated sentiment improvement]\n- User Experience Gain: [How this enhances gameplay enjoyment]\n\n**PLAYER-LOVED STRENGTHS** (What users genuinely appreciate and praise)\n- **[Strength]** - [Why players specifically value this and emotional connection]\n- Player Sentiment: [Positive feedback themes and emotional responses]\n- User Engagement: [How this keeps players invested and talking positively]\n\n**Requirements:**\n- Prioritize by player sentiment intensity and emotional impact\n- Focus on user experience and player feelings rather than revenue metrics\n- Include direct player voice and opinion themes\n- Emphasize what players love, hate, and expect from the game\n- Use player-centric language that reflects community sentiment\n- Limit to top 5-7 most emotionally significant issues/strengths per section\n- Base conclusions on actual player opinions and review sentiment patterns",
+              "role": "system"
+            }
+          ]
+        },
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1376,
+        -336
+      ],
+      "id": "c247e7bf-8610-4815-9410-c876f64f62e0",
+      "name": "Generate Reviews Summary",
+      "credentials": {
+        "openAiApi": {
+          "id": "Yv7i9DFExl1sfsBJ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ JSON.stringify($json.data) }}"
+            },
+            {
+              "content": "Analyze game review data to identify critical business risks and actionable fixes.\n\n**Input:** List of reviews with description, sentiment, and category\n\n**Output:** Business intelligence summary prioritized by impact:\n\n**CRITICAL RISKS** (Major threats to retention/revenue)\n- **[Issue]** - [Business impact and player volume affected]\n- Fix Priority: [High/Medium] \n- Estimated Impact: [Player churn risk/revenue loss]\n\n**OPERATIONAL FIXES** (Addressable technical/design issues)\n- **[Issue]** - [Specific fix needed and expected outcome]\n- Development Effort: [Low/Medium/High]\n- Player Satisfaction Gain: [Estimated improvement]\n\n**Requirements:**\n- Prioritize by business risk (player churn, negative review velocity, revenue impact)\n- Include affected player volume/percentage for each issue\n- Focus on fixable problems with clear solutions\n- Distinguish between quick wins vs major development efforts\n- Use data-driven language, avoid subjective descriptions\n\n**Input:** List of reviews with description, sentiment, and category (e.g., performance, story, gameplay)\n\n**Output:** Structured summary with:\n- Category name\n- Key weakness description (1-2 sentences)\n- Player impact score (1-5, where 5 = severely affects gameplay)\n\n**Format:**\n**[Category]** - [Weakness summary]\nImpact: [Score]/5\n\n**Requirements:**\n- Focus only on significant negative patterns\n- Prioritize issues mentioned across multiple reviews\n- Use clear, actionable language",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        560,
+        -448
+      ],
+      "id": "a5d6e0af-8e1e-4a94-bb04-06ebe89f07f6",
+      "name": "Generate Weak Elements Summary",
+      "credentials": {
+        "openAiApi": {
+          "id": "Yv7i9DFExl1sfsBJ",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ JSON.stringify($json.data) }}"
+            },
+            {
+              "content": "Analyze game review data to identify competitive advantages and growth opportunities.\n\n**Input:** List of reviews with description, sentiment, and category\n\n**Output:** Strategic advantage summary for market positioning:\n\n**COMPETITIVE EDGES** (Unique strengths vs market)\n- **[Strength]** - [Why this differentiates from competitors]\n- Player Value: [What players specifically praise]\n- Market Opportunity: [How to leverage this advantage]\n\n**GROWTH AMPLIFIERS** (Strengths to invest in further)\n- **[Strength]** - [Expansion/enhancement opportunity]\n- Business Potential: [Revenue/retention upside]\n- Investment Priority: [High/Medium/Low]\n\n**Requirements:**\n- Focus on differentiating strengths that competitors lack\n- Identify opportunities to expand successful features\n- Include player satisfaction metrics and praise volume\n- Suggest concrete ways to leverage each strength\n- Prioritize by market positioning and business growth potential\n\n**Input:** List of reviews with description, sentiment, and category (e.g., performance, story, gameplay)\n\n**Output:** Structured summary with:\n- Category name\n- Key strength description (1-2 sentences)\n- Player satisfaction score (1-5, where 5 = highly praised/exceptional)\n\n**Format:**\n**[Category]** - [Strength summary]\nSatisfaction: [Score]/5\n\n**Requirements:**\n- Focus only on significant positive patterns\n- Prioritize strengths mentioned across multiple reviews\n- Use clear, engaging language\n- Highlight what players love most about the game",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        560,
+        -240
+      ],
+      "id": "2265b942-c131-455f-b884-1d3742eea0a9",
+      "name": "Generate Strong Elements Summary",
+      "credentials": {
+        "openAiApi": {
+          "id": "Yv7i9DFExl1sfsBJ",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get Weak Elements",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get Strong Elements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Weak Elements": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Weak Elements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Strong Elements": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Strong Elements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Weak Elements": {
+      "main": [
+        [
+          {
+            "node": "Generate Weak Elements Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Strong Elements": {
+      "main": [
+        [
+          {
+            "node": "Generate Strong Elements Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Generate Reviews Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document": {
+      "main": [
+        [
+          {
+            "node": "Add data to document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Reviews Summary": {
+      "main": [
+        [
+          {
+            "node": "Create a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Weak Elements Summary": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Strong Elements Summary": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1ab5c1b5-aa6d-49f6-a42e-8f8de96de3ee",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "deadf1dc7524de2d95893ecdbee99200faaaf3b4dc5804f4703571f489628ddc"
+  },
+  "id": "ptFSF9BpUCym4aon",
+  "tags": [
+    {
+      "createdAt": "2025-04-05T10:53:05.512Z",
+      "updatedAt": "2025-04-05T10:53:05.512Z",
+      "id": "ars66RuHs0nD4BYs",
+      "name": "gamedev"
+    },
+    {
+      "createdAt": "2025-06-09T15:19:24.120Z",
+      "updatedAt": "2025-06-09T15:19:24.120Z",
+      "id": "malxJEIe7SFMPM0V",
+      "name": "point17labs"
+    },
+    {
+      "createdAt": "2025-06-17T06:27:31.136Z",
+      "updatedAt": "2025-06-17T06:27:31.136Z",
+      "id": "Lxg7oCpPokgUGYiE",
+      "name": "steam"
+    }
+  ]
+}
