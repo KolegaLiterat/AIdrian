@@ -1,0 +1,862 @@
+{
+  "name": "LLM && AI Curator",
+  "nodes": [
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Zwraca aktualną datę i czas (np. w ISO 8601). Używane do ustawiania [DATA] w temacie maila oraz określania bieżącego miesiąca dla deduplikacji artykułów.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTimeTool",
+      "typeVersion": 2,
+      "position": [
+        1376,
+        432
+      ],
+      "id": "fd491d1c-5249-4584-a2c8-3af169852de4",
+      "name": "get_current_time"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Zapisuje do bazy artykuły wykorzystane w aktualnej prasówce. Przyjmuje tablicę obiektów {url, title} i dopisuje je do rekordów bieżącego miesiąca.",
+        "dataTableId": {
+          "__rl": true,
+          "value": "fFlEoKd5pV15ML9r",
+          "mode": "list",
+          "cachedResultName": "Articles",
+          "cachedResultUrl": "/projects/7Qxghf3TTzUDPsic/datatables/fFlEoKd5pV15ML9r"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "url": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('url', ``, 'string') }}",
+            "tile": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('tile', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "tile",
+              "displayName": "tile",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTableTool",
+      "typeVersion": 1,
+      "position": [
+        1504,
+        432
+      ],
+      "id": "80b04cf1-6b6b-46e5-be95-a43bfdedbff9",
+      "name": "save_sent_articles"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Pobiera z bazy listę artykułów wysłanych w bieżącym miesiącu. Zwraca tablicę obiektów {url, title} do sprawdzania duplikatów.",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "fFlEoKd5pV15ML9r",
+          "mode": "list",
+          "cachedResultName": "Articles",
+          "cachedResultUrl": "/projects/7Qxghf3TTzUDPsic/datatables/fFlEoKd5pV15ML9r"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "url",
+              "keyValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('conditions0_Value', ``, 'string') }}"
+            }
+          ]
+        },
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}"
+      },
+      "type": "n8n-nodes-base.dataTableTool",
+      "typeVersion": 1,
+      "position": [
+        1632,
+        432
+      ],
+      "id": "a3fe5f87-92ce-42a1-bde3-a783f6c6a8ee",
+      "name": "get_sent_articles"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Wysyła gotowego maila z prasówką Tech Brief do Adriana. Przyjmuje parametry subject (temat) i body (treść maila w plaintext/markdown).",
+        "fromEmail": "adrian@kolegaliterat.pl",
+        "toEmail": "jawor34@gmail.com",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailFormat": "both",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Text', ``, 'string') }}",
+        "html": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('HTML', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSendTool",
+      "typeVersion": 2.1,
+      "position": [
+        1760,
+        432
+      ],
+      "id": "c097692a-3843-4365-9b71-7bbd3410d494",
+      "name": "send_tech_brief_email",
+      "webhookId": "dc72f362-38bb-45c4-a870-3a3998c4d152",
+      "credentials": {
+        "smtp": {
+          "id": "DlbTTTFB5CLbFuQi",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1,
+                3,
+                5
+              ],
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -320,
+        400
+      ],
+      "id": "697d530b-a3e1-46f8-9765-f17bbfbaf4c3",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.1",
+          "mode": "list",
+          "cachedResultName": "gpt-5.1"
+        },
+        "options": {
+          "responseFormat": "text",
+          "timeout": 600000
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1248,
+        432
+      ],
+      "id": "d21b9673-f900-4788-a142-5d64d7087fda",
+      "name": "GPT 5.1",
+      "credentials": {
+        "openAiApi": {
+          "id": "Yv7i9DFExl1sfsBJ",
+          "name": "OpenAi point17labs"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"post_limit\" : 10\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        128,
+        112
+      ],
+      "id": "5e7c0f1f-2cfd-48c0-8f78-817caf3da8e2",
+      "name": "Set Post Limit"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "subreddit": "singularity",
+        "limit": "={{ $json.post_limit }}",
+        "filters": {
+          "category": "top"
+        }
+      },
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [
+        352,
+        -368
+      ],
+      "id": "041bd314-d6ff-44f3-a9fe-8eb8eb695bb1",
+      "name": "Visit r/singularity",
+      "credentials": {
+        "redditOAuth2Api": {
+          "id": "vKEBEW5dErElKl3o",
+          "name": "Adrian Reddit Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "include": "specifiedFields",
+        "fieldsToInclude": "subreddit, selftext, , title, permalink, url",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        576,
+        -368
+      ],
+      "id": "88177c55-5ff9-45f8-80f9-31f837983f06",
+      "name": "Clean up r/singularity"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "subreddit": "ArtificialInteligence",
+        "limit": "={{ $json.post_limit }}",
+        "filters": {
+          "category": "top"
+        }
+      },
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [
+        352,
+        -176
+      ],
+      "id": "52bf56b4-cfaa-47b5-9f20-79c692a90377",
+      "name": "Visit r/ArtificialInteligence",
+      "credentials": {
+        "redditOAuth2Api": {
+          "id": "vKEBEW5dErElKl3o",
+          "name": "Adrian Reddit Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "include": "specifiedFields",
+        "fieldsToInclude": "url, permalink, selftext, title",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        576,
+        -176
+      ],
+      "id": "1d861dcf-4d0b-40ff-84f8-39d505c9065b",
+      "name": "Clean up r/ArtificialInteligence"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "subreddit": "Futurology",
+        "limit": "={{ $json.post_limit }}",
+        "filters": {
+          "category": "top"
+        }
+      },
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [
+        352,
+        16
+      ],
+      "id": "ee2332ef-fddd-49e0-9cd4-b367ad8d4640",
+      "name": "Visit r/Futurology",
+      "credentials": {
+        "redditOAuth2Api": {
+          "id": "vKEBEW5dErElKl3o",
+          "name": "Adrian Reddit Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "include": "specifiedFields",
+        "fieldsToInclude": "subreddit, selftext, , title, permalink, url",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        576,
+        16
+      ],
+      "id": "f08e5e36-6bdd-42d9-af70-7bbb2d5c4355",
+      "name": "Clean up r/Futurology"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "subreddit": "LocalLLaMA",
+        "limit": "={{ $json.post_limit }}",
+        "filters": {
+          "category": "top"
+        }
+      },
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [
+        352,
+        208
+      ],
+      "id": "3f787279-23be-41cc-9552-aec0332b1ead",
+      "name": "Visit r/LocalLLaMA",
+      "credentials": {
+        "redditOAuth2Api": {
+          "id": "vKEBEW5dErElKl3o",
+          "name": "Adrian Reddit Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "include": "specifiedFields",
+        "fieldsToInclude": "url, permalink, selftext, title",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        576,
+        208
+      ],
+      "id": "105905fe-c619-4489-83c1-e61e05437c86",
+      "name": "Clean up r/LocalLLaMA"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "subreddit": "MachineLearning",
+        "limit": "={{ $json.post_limit }}",
+        "filters": {
+          "category": "top"
+        }
+      },
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [
+        352,
+        400
+      ],
+      "id": "06ad277e-6f4b-4742-8d22-32e229e43824",
+      "name": "Visit r/MachineLearning",
+      "credentials": {
+        "redditOAuth2Api": {
+          "id": "vKEBEW5dErElKl3o",
+          "name": "Adrian Reddit Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "include": "specifiedFields",
+        "fieldsToInclude": "url, permalink, selftext, title",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        576,
+        400
+      ],
+      "id": "728ce390-8b31-4540-842d-ce62a492108c",
+      "name": "Clean up r/MachineLearning"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "subreddit": "Python",
+        "limit": "={{ $json.post_limit }}",
+        "filters": {
+          "category": "top"
+        }
+      },
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [
+        352,
+        592
+      ],
+      "id": "6748b81f-6419-483c-bf25-b8373124533a",
+      "name": "Visit r/Python",
+      "credentials": {
+        "redditOAuth2Api": {
+          "id": "vKEBEW5dErElKl3o",
+          "name": "Adrian Reddit Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "include": "specifiedFields",
+        "fieldsToInclude": "url, permalink, selftext, title",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        576,
+        592
+      ],
+      "id": "e1068bc1-3f73-460a-b821-30f1180eaf31",
+      "name": "Clean up r/Python"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://export.arxiv.org/api/query?search_query=%28cat%3Acs.AI+OR+cat%3Acs.LG+OR+cat%3Acs.CL%29+AND+%28all%3A%22large+language+model%22+OR+all%3A%22LLM+agent%22+OR+all%3A%22autonomous+agent%22+OR+all%3A%22workflow+automation%22+OR+all%3A%22process+automation%22+OR+all%3A%22prompt+engineering%22+OR+all%3A%22retrieval+augmented%22+OR+all%3A%22RAG%22+OR+all%3A%22code+generation%22+OR+all%3A%22text-to-image%22+OR+all%3A%22diffusion%22+OR+all%3A%22ComfyUI%22+OR+all%3A%22production+deployment%22+OR+all%3A%22business+application%22%29+ANDNOT+%28all%3A%22theoretical+bound%22+OR+all%3A%22convergence+rate%22+OR+all%3A%22asymptotic+analysis%22+OR+all%3A%22sample+complexity%22%29&start=0&max_results=25&sortBy=submittedDate&sortOrder=descending",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -96,
+        784
+      ],
+      "id": "d770b1e6-cc50-4493-b7bd-b9347ccedd42",
+      "name": "Query arxiv"
+    },
+    {
+      "parameters": {
+        "options": {
+          "ignoreAttrs": false,
+          "normalize": true
+        }
+      },
+      "type": "n8n-nodes-base.xml",
+      "typeVersion": 1,
+      "position": [
+        128,
+        784
+      ],
+      "id": "d84df407-99cb-4174-895c-2568024d0423",
+      "name": "Convert"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Pobieramy dane wejściowe. Zakładamy, że feed wchodzi jako jeden duży obiekt.\nconst item = $input.first();\nconst feedData = item.json;\n\n// 2. Dobieramy się do listy artykułów.\n// Ścieżka w Twoim JSON to: feed -> entry\n// Zabezpieczamy się na wypadek, gdyby 'entry' nie było tablicą (np. przy 1 wyniku)\nlet entries = feedData.feed.entry;\n\nif (!Array.isArray(entries)) {\n  entries = [entries];\n}\n\n// 3. Funkcja pomocnicza do czyszczenia tekstu (usuwa \\n i zbędne spacje)\nconst cleanText = (text) => {\n  if (typeof text === 'string') {\n    return text\n      .replace(/[\\r\\n]+/g, ' ') // Zamień znaki nowej linii na spację\n      .replace(/\\s+/g, ' ')      // Usuń podwójne spacje\n      .trim();                   // Usuń spacje z początku i końca\n  }\n  return text || '';\n};\n\n// 4. Mapujemy dane na format wyjściowy n8n\n// Każdy element tablicy zostanie zwrócony jako oddzielny item\nreturn entries.map(entry => {\n  return {\n    json: {\n      id: entry.id,\n      title: cleanText(entry.title),\n      summary: cleanText(entry.summary)\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        352,
+        784
+      ],
+      "id": "46d766b4-785d-479a-aa6c-443dbc1afb1c",
+      "name": "Clean up arvix Response"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        576,
+        784
+      ],
+      "id": "a70d7297-667c-445f-b6b4-20ae8e39e13b",
+      "name": "Get all arvix Data"
+    },
+    {
+      "parameters": {
+        "numberInputs": 7
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        800,
+        128
+      ],
+      "id": "cc79d7fa-e17d-4a47-89c4-866991086c77",
+      "name": "Merge everything!"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1024,
+        208
+      ],
+      "id": "a6514899-9ce6-4fd7-bbd5-e79ae1b9355c",
+      "name": "Create one list"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data.toJsonString() }}",
+        "options": {
+          "systemMessage": "Jesteś kuratorskim asystentem tworzącym spersonalizowaną prasówkę tech/AI dla specjalisty automatyzacji i generatywnej AI.\n\n# PROFIL ODBIORCY\n- Właściciel Point17Labs, specjalista AI w BaseLinker\n- Focus: praktyczne zastosowania AI, automatyzacja procesów, agenci LLM\n- Background: 8 lat gamedev → obecnie tech/AI\n- Style: głębia > powierzchowność, praktyka > teoria, zero buzzwordów\n- Antypatterny: clickbait, drama, puste \"AI will change everything\"\n\n# NARZĘDZIA (UŻYWAJ ŚWIADOMIE)\n\nMasz do dyspozycji 4 narzędzia (node’y n8n):\n\n1. `get_current_time`  \n   Zwraca aktualną datę i czas (np. w ISO 8601).  \n   Używaj do:\n   - wstawienia [DATA] w temacie maila,\n   - określenia „bieżącego miesiąca” dla deduplikacji artykułów,\n   - wstawienia [data] w sekcji „Następna prasówka: [data]”.\n\n2. `get_sent_articles`  \n   Pobiera z bazy listę artykułów wysłanych w bieżącym miesiącu.  \n   Zwraca tablicę obiektów `{url, title}` do sprawdzania duplikatów.\n\n3. `save_sent_articles`  \n   Zapisuje do bazy artykuły wykorzystane w aktualnej prasówce.  \n   Przyjmuje tablicę obiektów `{url, title}` i dopisuje je do rekordów bieżącego miesiąca.\n\n4. `send_tech_brief_email`  \n   Wysyła gotowego maila z prasówką Tech Brief do Adriana.  \n   Przyjmuje parametry:\n   - `subject` – temat maila,\n   - `body` – treść maila (plaintext/markdown).\n\n# WYSOKOPOZIOMOWY WORKFLOW\n\n1. Wywołaj `get_current_time` → ustal:\n   - datę do `[DATA]` w temacie,\n   - aktualny miesiąc dla deduplikacji.\n\n2. Wywołaj `get_sent_articles` → pobierz listę `{url, title}` z bieżącego miesiąca.\n\n3. Wejściem jest JSON z postami Reddit + arXiv w jednej strukturze.  \n   Najpierw:\n   - przefiltruj JSON: usuń wszystkie wpisy, których `url` już jest w bazie z kroku 2.\n\n4. Na przefiltrowanej liście:\n   - oceń każdy artykuł w skali 1–10 (wewnętrznie),\n   - wybierz łącznie 5–7 najlepszych do maila.\n\n5. Zbuduj gotowy mail po polsku (markdown i html), dokładnie w opisanej niżej strukturze.  \n   Zwróć **tylko** treść maila (bez komentarzy/preambuły).\n\n6. Jeśli w mailu są artykuły:\n   - wywołaj `save_sent_articles` z listą `{url, title}` artykułów użytych w mailu.\n\n7. Na końcu wywołaj `send_tech_brief_email` z:\n   - `subject`: tematem maila,\n   - `body`: pełną treścią maila.\n\n8. Jeśli po deduplikacji nie został **żaden** nowy artykuł:\n   - nie licz scoringu,\n   - wygeneruj specjalny \"pusty\" mail (patrz sekcja „Jeśli wszystkie artykuły są duplikatami”),\n   - **nie** wywołuj `save_sent_articles`,\n   - mimo wszystko wywołaj `send_tech_brief_email` z tym „pustym” mailem.\n\n# ZASADY SELEKCJI\n\n## Reddit – wybierz 2–4 najlepsze\n\nPRIORYTETYZUJ (score 8–10/10):\n- Praktyczne implementacje z kodem / case study\n- Niestandardowe zastosowania AI w biznesie i automatyzacji\n- Insights z produkcji (co działa / nie działa)\n- Nowe narzędzia rozwiązujące konkretny problem\n- Architektura systemów (agenci, RAG, workflow, orchestration)\n\nODRZUĆ automatycznie:\n- Drama/gossip (np. Elon piss drinking)\n- Spekulacje o AGI/singularity bez konkretów\n- Clickbaity bez wartości merytorycznej\n- Podstawowe tutoriale \"hello world\"\n- Politykę/strategie firm bez technicznego mięsa\n\n## arXiv – wybierz 2–3 najlepsze\n\nPRIORYTETYZUJ:\n- Praktyczne techniki możliwe do przetestowania \"tu i teraz\"\n- Ulepszenia RAG / agents / code generation\n- Podejścia \"production-ready\"\n- Prace z jasno opisaną ścieżką implementacji\n\nODRZUĆ:\n- Czysta matematyka bez zastosowania\n- \"We prove convergence...\" bez eksperymentów\n- Tylko benchmarki SOTA bez use case\n- Prace, które sensownie działają tylko na 8×A100 bez wariantu “mniejszego”\n\n# ZARZĄDZANIE DUPLIKATAMI\n\n**KRYTYCZNE: pracujesz zawsze na bieżącym miesiącu (wg `get_current_time`).**\n\nWorkflow deduplikacji:\n\n1. **PRZED SELEKCJĄ:**\n   - Wywołaj `get_sent_articles` → pobierz listę wszystkich `{url, title}` z bieżącego miesiąca.\n\n2. **FILTR JSONA:**\n   - Usuń wszystkie artykuły, których `url` już jest w bazie.\n\n3. **NORMALNA SELEKCJA:**\n   - Scoring, wybór 5–7 artykułów i budowa maila tylko na przefiltrowanej liście.\n\n4. **PO STWORZENIU MAILA:**\n   - Jeśli w mailu są nowe artykuły → wywołaj `save_sent_articles` z `{url, title}` z maila.\n\n**Jeśli wszystkie artykuły są duplikatami (po filtrze lista jest pusta):**  \nWyślij maila (przez `send_tech_brief_email`) z treścią:\n\nCześć Adrian,\n\nWszystkie artykuły z dzisiejszego scrapingu były już w poprzednich prasówkach tego miesiąca.\n\nMożliwe przyczyny:\n- Słaby tydzień na tech Reddit/arXiv\n- Algorytm HOT pokazuje te same popularne posty\n- Twoje filtry są bardzo selektywne (to dobrze!)\n\nNastępna prasówka: [data]\n\n---\nNa razie nic ciekawego 🤷\n\n`[data]` ustaw na datę z `get_current_time` albo na kolejną datę wysyłki, jeśli workflow ją dostarcza.\n\n# STRUKTURA MAILA\n\n## Temat maila\n\"🤖 Tech Brief [DATA] - [1-2 słowa o głównym temacie]\"\n\n- `[DATA]` = data z `get_current_time` (format dopasowany do workflow, np. 2025-11-21).\n\n## Treść (po polsku, plaintext/markdown, bez dodatkowego komentarza):\n\nCześć Adrian,\n\n[Opcjonalnie: 1 zdanie kontekstu jeśli jest dominujący motyw dnia]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🔥 MUST READ (2-3 artykuły)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n### 1. [Tytuł]\n**Źródło:** [Reddit: r/subreddit] lub [arXiv: kategorie]\n\n**Dlaczego to czytać:** [1-2 zdania – konkretna wartość]\n\n**Key takeaways:**\n- [Praktyczny insight #1]\n- [Praktyczny insight #2]  \n- [Praktyczny insight #3]\n\n**Gdzie to użyć:** [Konkretne zastosowanie w jego pracy/projektach]\n\n🔗 [Link]\n\n---\n\n[Powtórz dla pozostałych MUST READ]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n💡 WARTO PRZEJRZEĆ (2-3 artykuły)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n### [Tytuł]\n**TL;DR:** [1-2 zdania + konkretna wartość]\n🔗 [Link]\n\n---\n\n[Powtórz dla pozostałych]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🎲 WILDCARD (0-1 artykuł)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n[Coś niestandardowego, może zaskoczyć, poza głównym nurtem – max 1 pozycja]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n**Czas czytania:** [wyestumuj czas czytania)\n**Przegapione:** [X] artykułów było blisko (jeśli były sensowne, ale nie weszły do topki)\n\n---\nPowodzenia w pracy 🚀\n\n# KRYTERIA LICZBOWE\n\n**TOTAL: 5–7 artykułów w mailu**\n- MUST READ: 2–3 (najwyższy priorytet)\n- WARTO PRZEJRZEĆ: 2–3 (solidny średni priorytet)  \n- WILDCARD: 0–1 (niszowe/ciekawe)\n\nProporcje:\n- Jeśli Reddit ma lepszy content → więcej z Reddit\n- Jeśli arXiv ma mocne prace → więcej z arXiv\n- Ideał: ~50/50 Reddit + arXiv, ale **jakość > proporcje**\n\n## Scoring (wewnętrzny, nie pokazuj w mailu):\n\n- 9–10: MUST READ (praktyczny game-changer)\n- 7–8: WARTO PRZEJRZEĆ (solidny content)\n- 6: WILDCARD (jeśli unikalny kąt)\n- <6: odrzuć\n\n# JĘZYK I TON\n\n- Polski, bezpośredni, konkretny\n- Zwracaj się \"ty\"\n- Krótkie, treściwe zdania\n- Zero corporate speak, zero buzzwordów\n- Emoji tylko funkcjonalne (🔥💡🔗🎲), nie dla ozdoby\n\n# RED FLAGS – DO ODRZUCENIA\n\nReddit:\n- r/singularity drama (np. Elon piss) → SKIP\n- \"AI will replace everyone\" bez mięsa technicznego → SKIP\n- Tylko upvote’y, brak głębi technicznej → SKIP\n\narXiv:\n- Abstract pełen matematyki bez \"we demonstrate\" / \"we evaluate\" → SKIP\n- Brak eksperymentów, czysta teoria → SKIP\n- Sekcja \"future work\" ważniejsza niż wyniki → SKIP\n\n# KONTEKST CZASOWY (NIE ZMIENIA STRUKTURY MAILA)\n\nMail idzie 3× w tygodniu (pon/śr/pt). Możesz jedynie lekko dostosować komentarz otwierający:\n- Poniedziałek: bardziej praktyczny, \"na start tygodnia\"\n- Środa: mix praktyka + szersza perspektywa\n- Piątek: lżejszy ton, może trochę więcej research/“weekend reading”\n\n# OUTPUT\n\n1. Zbuduj **tylko** treść maila (markdown i html).\n2. Następnie wywołaj `send_tech_brief_email` z tematem i treścią i wyślij maila!\n3. Jeśli w mailu są artykuły → wywołaj `save_sent_articles` z `{url, title}`.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1432,
+        208
+      ],
+      "id": "5c0b2292-6700-4cdd-bd7a-c15f745b3999",
+      "name": "Curator"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "get_current_time": {
+      "ai_tool": [
+        [
+          {
+            "node": "Curator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "save_sent_articles": {
+      "ai_tool": [
+        [
+          {
+            "node": "Curator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_sent_articles": {
+      "ai_tool": [
+        [
+          {
+            "node": "Curator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "send_tech_brief_email": {
+      "ai_tool": [
+        [
+          {
+            "node": "Curator",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Query arxiv",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Set Post Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT 5.1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Curator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Post Limit": {
+      "main": [
+        [
+          {
+            "node": "Visit r/singularity",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Visit r/ArtificialInteligence",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Visit r/Futurology",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Visit r/LocalLLaMA",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Visit r/MachineLearning",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Visit r/Python",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Visit r/singularity": {
+      "main": [
+        [
+          {
+            "node": "Clean up r/singularity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean up r/singularity": {
+      "main": [
+        [
+          {
+            "node": "Merge everything!",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Visit r/ArtificialInteligence": {
+      "main": [
+        [
+          {
+            "node": "Clean up r/ArtificialInteligence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean up r/ArtificialInteligence": {
+      "main": [
+        [
+          {
+            "node": "Merge everything!",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Visit r/Futurology": {
+      "main": [
+        [
+          {
+            "node": "Clean up r/Futurology",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean up r/Futurology": {
+      "main": [
+        [
+          {
+            "node": "Merge everything!",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Visit r/LocalLLaMA": {
+      "main": [
+        [
+          {
+            "node": "Clean up r/LocalLLaMA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean up r/LocalLLaMA": {
+      "main": [
+        [
+          {
+            "node": "Merge everything!",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Visit r/MachineLearning": {
+      "main": [
+        [
+          {
+            "node": "Clean up r/MachineLearning",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean up r/MachineLearning": {
+      "main": [
+        [
+          {
+            "node": "Merge everything!",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Visit r/Python": {
+      "main": [
+        [
+          {
+            "node": "Clean up r/Python",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean up r/Python": {
+      "main": [
+        [
+          {
+            "node": "Merge everything!",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Query arxiv": {
+      "main": [
+        [
+          {
+            "node": "Convert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert": {
+      "main": [
+        [
+          {
+            "node": "Clean up arvix Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean up arvix Response": {
+      "main": [
+        [
+          {
+            "node": "Get all arvix Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all arvix Data": {
+      "main": [
+        [
+          {
+            "node": "Merge everything!",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "Merge everything!": {
+      "main": [
+        [
+          {
+            "node": "Create one list",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create one list": {
+      "main": [
+        [
+          {
+            "node": "Curator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1bb6b4b8-cb81-4059-9159-5f75b0481d80",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "deadf1dc7524de2d95893ecdbee99200faaaf3b4dc5804f4703571f489628ddc"
+  },
+  "id": "Qcvv2gPkdpB1BfnD",
+  "tags": []
+}
